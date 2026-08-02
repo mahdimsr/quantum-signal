@@ -71,5 +71,5 @@ type Signal struct {
 	Candle    Candle
 }
 
-const BUY = "BUY"
-const SELL = "SELL"
+const SignalBuy = "BUY"
+const SignalSell = "SELL"

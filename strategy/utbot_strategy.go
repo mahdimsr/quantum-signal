@@ -46,7 +46,7 @@ func (s *UTBotStrategy) GenerateSignals(candles []models.Candle) []models.Signal
 		// منطق Buy: قیمت فعلی بالای استاپ است و قیمت قبلی پایین یا مساوی استاپ بوده (Crossover به بالا)
 		if currSrc > currStop && prevSrc <= prevStop {
 			signals = append(signals, models.Signal{
-				Type:      models.BUY,
+				Type:      models.SignalBuy,
 				Timestamp: candles[i+1].Time,
 				Price:     candles[i+1].Close,
 				Reason:    "UT Bot: Price crossed above Trailing Stop",
@@ -57,7 +57,7 @@ func (s *UTBotStrategy) GenerateSignals(candles []models.Candle) []models.Signal
 		// منطق Sell: قیمت فعلی پایین استاپ است و قیمت قبلی بالا یا مساوی استاپ بوده (Crossover به پایین)
 		if currSrc < currStop && prevSrc >= prevStop {
 			signals = append(signals, models.Signal{
-				Type:      models.SELL,
+				Type:      models.SignalSell,
 				Timestamp: candles[i+1].Time,
 				Price:     candles[i+1].Close,
 				Reason:    "UT Bot: Price crossed below Trailing Stop",
