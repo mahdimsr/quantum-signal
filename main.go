@@ -1,8 +1,12 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"quantum-signal/scheduler"
+)
 
 func main() {
-	fmt.Println("Hello! I am Quantum signal platform")
+	fmt.Println("📶 Quantum signal started...")
 
+	scheduler.Start(5)
 }
