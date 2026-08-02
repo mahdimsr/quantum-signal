@@ -62,3 +62,14 @@ func (candle *Candle) IsMarubozu() bool {
 
 	return candle.Body() > candle.Shadow()
 }
+
+type Signal struct {
+	Type      string
+	Timestamp int64
+	Price     float64
+	Reason    string
+	Candle    Candle
+}
+
+const BUY = "BUY"
+const SELL = "SELL"
