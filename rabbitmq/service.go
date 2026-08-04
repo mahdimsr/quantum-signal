@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type RabbitMqService struct {
@@ -12,6 +14,7 @@ type RabbitMqService struct {
 }
 
 type RabbiMqMessage struct {
+	ID            string             `json:"id"`
 	Version       int                `json:"version"`
 	Price         float64            `json:"price"`
 	Symbol        string             `json:"symbol"`
@@ -48,7 +51,10 @@ func NewRabbitMqService() (rabbitMqService *RabbitMqService, err error) {
 
 func (rabbitService *RabbitMqService) GenerateMessageV1(price, sl float64, symbol, side, strategy string, utcTime int64, meta RabbiMqMessageMeta) RabbiMqMessage {
 
+	messageId := uuid.New().String()
+
 	return RabbiMqMessage{
+		ID:            messageId,
 		Version:       1,
 		Price:         price,
 		StopLoss:      sl,
