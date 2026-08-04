@@ -1,4 +1,4 @@
-package exchange
+package candles
 
 import (
 	"encoding/json"
@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func GetCandles(symbol string, timeframe string, limit int) ([]models.Candle, error) {
+func BinanceGetCandles(symbol string, timeframe string, limit int) ([]models.Candle, error) {
 
 	url := fmt.Sprintf("https://api.binance.com/api/v3/klines?symbol=%s&interval=%s&limit=%d",
 		symbol,
@@ -46,7 +46,7 @@ func GetCandles(symbol string, timeframe string, limit int) ([]models.Candle, er
 	return candles, nil
 }
 
-func GetCandlesByTimeRange(symbol string, timeframe string, startTime, endTime int64) ([]models.Candle, error) {
+func BinanceGetCandlesByTimeRange(symbol string, timeframe string, startTime, endTime int64) ([]models.Candle, error) {
 
 	url := fmt.Sprintf("https://api.binance.com/api/v3/klines?symbol=%s&interval=%s&startTime=%d&endTime=%d&limit=1000",
 		symbol,
@@ -84,7 +84,7 @@ func GetCandlesByTimeRange(symbol string, timeframe string, startTime, endTime i
 	return candles, nil
 }
 
-func GetAllCandlesByDateString(symbol string, timeframe string, startDateStr string, endDateStr string) ([]models.Candle, error) {
+func BinanceGetAllCandlesByDateString(symbol string, timeframe string, startDateStr string, endDateStr string) ([]models.Candle, error) {
 
 	layout := "2006-01-02"
 
@@ -105,7 +105,7 @@ func GetAllCandlesByDateString(symbol string, timeframe string, startDateStr str
 	var allCandles []models.Candle
 
 	for currentStartTime < endTime {
-		candles, err := GetCandlesByTimeRange(symbol, timeframe, currentStartTime, endTime)
+		candles, err := BinanceGetCandlesByTimeRange(symbol, timeframe, currentStartTime, endTime)
 		if err != nil {
 			return nil, fmt.Errorf("error fetching candles at timestamp %d: %w", currentStartTime, err)
 		}

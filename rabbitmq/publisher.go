@@ -52,7 +52,7 @@ func (p *Publisher) Publish(ctx context.Context, queueName string, message inter
 	// ۴. ارسال
 	err = ch.PublishWithContext(
 		ctx,
-		"",        // exchange
+		"",        // candles
 		queueName, // routing key
 		false,
 		false,
