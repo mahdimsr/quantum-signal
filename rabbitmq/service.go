@@ -3,6 +3,7 @@ package rabbitmq
 import (
 	"context"
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/google/uuid"
@@ -32,8 +33,8 @@ type RabbiMqMessageMeta struct {
 
 func NewRabbitMqService() (rabbitMqService *RabbitMqService, err error) {
 
-	rabbitURL := "amqp://guest:guest@localhost:5672/"
-	queueName := "signals"
+	rabbitURL := os.Getenv("RABBITMQ_URL")
+	queueName := os.Getenv("RABBITMQ_QUEUE")
 
 	client, err := NewRabbitMQClient(rabbitURL)
 	if err != nil {
