@@ -5,6 +5,8 @@ import (
 	"log"
 	"quantum-signal/candles"
 	"quantum-signal/indicator"
+	"quantum-signal/models"
+	"quantum-signal/rabbitmq"
 	"quantum-signal/strategy"
 	"time"
 )
@@ -21,10 +23,10 @@ func Start(minutes int) {
 		nextRun := getNextRunMark(now, minutes)
 		waitDuration := time.Until(nextRun)
 
-		/*rabbitService, err := rabbitmq.NewRabbitMqService()
+		rabbitService, err := rabbitmq.NewRabbitMqService()
 		if err != nil {
 			log.Fatalf("Failed to create rabbitmq service: %s", err)
-		}*/
+		}
 
 		log.Printf("⌚ Next execution at: %s (waiting %v)", nextRun.Format(time.RFC3339), waitDuration)
 
@@ -45,7 +47,33 @@ func Start(minutes int) {
 
 		if IsWithinDuration(now, signalTime, 15) {
 
-			// TODO: send signal to rabbit
+			sl := 0.0
+			tp := 0.0
+			if lastSignal.Type == models.SignalBuy {
+				sl = lastSignal.Price * -(3 / 100)
+				tp = lastSignal.Price * (0.3 / 100)
+			} else {
+				sl = lastSignal.Price * (3 / 100)
+				tp = lastSignal.Price * -(0.3 / 100)
+			}
+
+			rabbitMessage := rabbitService.GenerateMessageV1(
+				lastSignal.Price,
+				sl,
+				"BTCUDST",
+				lastSignal.Type,
+				"SandBox",
+				lastSignal.Timestamp,
+				rabbitmq.RabbiMqMessageMeta{
+					TakeProfit: tp,
+					Config: map[string]interface{}{
+						"Sens": 5,
+						"ATR":  3,
+					},
+				})
+
+			rabbitService.SendSignal(rabbitMessage)
+
 		}
 
 	}
