@@ -31,16 +31,19 @@ func BinanceGetCandles(symbol string, timeframe string, limit int) ([]models.Can
 		return nil, fmt.Errorf("binance API returned non-200 status: %s, body: %s", resp.Status, string(body))
 	}
 
-	// 4. Read the response body
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read response body: %w", err)
 	}
 
-	// 5. Unmarshal the JSON response into a slice of Candle structs
-	var candles []models.Candle
-	if err := json.Unmarshal(body, &candles); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal JSON response: %w", err)
+	candles, err := parseBinanceCandles(body)
+	if err != nil {
+		return nil, fmt.Errorf("parsing binance candles error: %s", err)
+	}
+
+	for i := range candles {
+		candles[i].Symbol = symbol
+		candles[i].Timeframe = timeframe
 	}
 
 	return candles, nil
